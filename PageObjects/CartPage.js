@@ -1,4 +1,5 @@
 const REMOVE_NAME = /^(Remove|Delete)$/i;
+const { test, expect } = require('@playwright/test');
 
 class CartPage {
   constructor(page) {
@@ -8,10 +9,13 @@ class CartPage {
 
   async emptyCart() {
     await this.page.goto('/cart');
+    await this.page.getByRole('heading', { name: 'Cart' }).waitFor();
+    
     const remove = this.page.getByRole('button', { name: REMOVE_NAME });
-    for (let i = 0; i < 100; i++) {
-      if ((await remove.count()) === 0) break;
+    while ((await remove.count()) > 0) {
+      const before = await remove.count();
       await remove.first().click();
+      await expect(remove).toHaveCount(before - 1, { timeout: 10_000 });
     }
   }
 

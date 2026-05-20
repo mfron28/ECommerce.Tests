@@ -1,9 +1,9 @@
+const { expect } = require('@playwright/test');
+
 class ProductsPage {
     constructor(page) {
       this.page = page;
       this.productsPage = page.getByRole('link', { name: 'Products' });
-      this.productTShirt = page.getByRole('main').getByRole('link', { name: 'Cotton T-Shirt' });
-      this.productWallet = page.getByRole('main').getByRole('link', { name: 'Leather Wallet' });
       this.searchButton = page.getByRole('textbox', { name: 'Search' });
       this.category = page.getByRole('combobox', { name: 'Category' });
       this.maxPrice = page.getByRole('spinbutton', { name: 'Max price' });
@@ -21,6 +21,15 @@ class ProductsPage {
       await this.searchButton.press('Enter');
       await this.page.getByRole('main').getByText(new RegExp(productName, 'i')).first().waitFor();
     }
+
+    async searchProductByPrice(minPrice, maxPrice) {
+      const min = String(minPrice);
+      const max = String(maxPrice);
+      await this.minPrice.fill(min);
+      await this.maxPrice.fill(max);
+      await this.maxPrice.press('Enter');
+      await this.page.getByRole('main').getByRole('article').first().waitFor({ state: 'visible' });
+    }
   
     async clearSearch() {
       await this.searchButton.fill('');
@@ -28,15 +37,25 @@ class ProductsPage {
       await this.page.getByRole('main').getByRole('article').first().waitFor({ state: 'visible' });
     }
   
-    async searchCategory() {
-      await this.category.selectOption('Accessories');
+   
+    async selectCategory(categoryName) {
+      await this.category.selectOption({ label: categoryName });
+      await this.page.getByRole('main').getByRole('article').first().waitFor({ state: 'visible' });
     }
   
-    async selectProduct() {
-      await this.productWallet.click();
+   
+    async selectProduct(productName) {
+      await this.page.getByRole('main').getByRole('link', { name: productName }).click();
       await this.addToCart.waitFor({ state: 'visible' });
     }
   
+    async selectOutOfStockProduct(productName) {
+      await this.page.getByRole('main').getByRole('link', { name: productName }).click();
+      await this.addToCart.waitFor({ state: 'visible' });
+      await expect(this.addToCart).toBeDisabled();
+      await expect(this.page.getByRole('main').getByText(/out of stock/i)).toBeVisible();
+    }
+
     async openProductFromListingByIndex(index) {
       const card = this.page.getByRole('main').getByRole('article').nth(index);
       await card.getByRole('heading', { level: 2 }).click();

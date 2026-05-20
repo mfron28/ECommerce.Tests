@@ -1,0 +1,23 @@
+{
+    "validUser": {
+      "email": "fronmadalina@gmail.com",
+      "password": "Madalina9!"
+    },
+    "wrongPasswordUser": {
+      "email": "fronmadalina@outlook.com",
+      "password": "password"
+    },
+    "invalidUser": {
+      "email": "user@email.com",
+      "password": "password"
+    },
+    "registeredUser": {
+      "email": "fronmadalina@gmail.com",
+      "password": "Madalina9!"
+    },
+    "newUser":{
+        "email": "user123@gmail.com",
+        "password":"Password123"
+    }
+    
+  }

@@ -1,3 +1,4 @@
+
 class LoginPage {
   constructor(page) {
     this.page = page;
@@ -19,6 +20,13 @@ class LoginPage {
       this.page.waitForURL((u) => !u.pathname.includes('/login'), { timeout: 20_000 }),
       this.signIn.click(),
     ]);
+  }
+
+  //use for invalid logins, wrong credentials
+  async submitCredentials(email, password) {
+    await this.email.fill(email);
+    await this.password.fill(password);
+    await this.signIn.click();
   }
 
   async createAnAccount() {
