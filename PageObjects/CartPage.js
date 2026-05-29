@@ -18,19 +18,18 @@ class CartPage {
       await expect(remove).toHaveCount(before - 1, { timeout: 10_000 });
     }
   }
-
-  async changeNumberOfProducts() {
+ 
+  async changeNumberOfProducts(productName, noOfProducts) {
     const line = this.page
-      .getByRole('main')
-      .locator('article, li, tr')
-      .filter({ hasText: /Leather Wallet/i })
+      .getByRole('listitem')
+      .filter({ hasText: productName })
       .first();
-    await line.waitFor({ state: 'visible', timeout: 30000 });
+    await line.waitFor({ state: 'visible', timeout: 30_000 });
     const qty = line
       .getByRole('spinbutton')
       .or(line.locator('input[type="number"]'))
       .first();
-    await qty.fill('2');
+    await qty.fill(String(noOfProducts));
     await qty.press('Enter');
   }
 

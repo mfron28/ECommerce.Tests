@@ -10,6 +10,7 @@ class ProductsPage {
       this.minPrice = page.getByRole('spinbutton', { name: 'Min price' });
       this.addToCart = page.getByRole('button', { name: 'Add to cart' });
       this.products = page.getByRole('main').getByRole('article');
+      this.addToWishlistBtn=page.getByRole('button', { name: 'Add to wishlist' });
     }
   
     async gotoProductsListing() {
@@ -78,12 +79,18 @@ class ProductsPage {
     }
   
     async addProductToCart() {
+      await expect(this.addToCart).toBeEnabled({ timeout: 10_000 });
       await this.addToCart.click();
     }
   
     async goToCartPage() {
       await this.page.getByRole('navigation').getByRole('link', { name: 'Cart', exact: true }).click();
       await this.page.waitForURL('**/cart', { timeout: 15000 });
+    }
+
+    async addProductToWishlist(){
+      await expect(this.addToWishlistBtn).toBeEnabled({ timeout: 10_000 });
+      await this.addToWishlistBtn.click();
     }
   }
   

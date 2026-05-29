@@ -18,6 +18,20 @@
     "newUser":{
         "email": "user123@gmail.com",
         "password":"Password123"
+    },
+    "changeUserPassword": {
+       "email": "userupdate@gmail.com",
+       "password": "Password123!",
+       "newPassword": "Password1!"
+    },
+    "changeUserEmail":{
+      "email": "userUpdateEmai@gmail.com",
+      "password": "Password123!",
+      "newEmail":"userUpdateEmail@gmail.com"
+    },
+    "forgotPassword":{
+      "email": "fronmadalina@outlook.com",
+      "password": "Madalina9!"
     }
     
   }

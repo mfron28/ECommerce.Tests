@@ -7,6 +7,7 @@ class LoginPage {
     this.password = main.locator('#login-password');
     this.signIn = main.getByRole('button', { name: 'Sign in' });
     this.createAccount = main.getByRole('link', { name: 'Create an account' });
+    this.forgotPassword=main.getByRole('link', { name: 'Forgot Password' });
   }
 
   async gotoLogin() {
@@ -31,6 +32,10 @@ class LoginPage {
 
   async createAnAccount() {
     await this.createAccount.click();
+  }
+
+  async goToForgotPasswordPage(){
+    await this.forgotPassword.click();
   }
 }
 

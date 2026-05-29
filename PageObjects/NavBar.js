@@ -6,6 +6,7 @@ class NavBar{
         this.ordersLink=page.getByRole('link', { name: 'Orders' });
         this.logout=page.getByRole('button', { name: 'Log out' });
         this.shopPage=page.getByRole('link', { name: 'Shop' });
+        this.wishlistPage=page.getByRole('link', { name: 'Wishlist' });
     }
 
     async goToProductPageFromNavbar(){
@@ -23,6 +24,10 @@ class NavBar{
     }
     async goToShopPage(){
         await this.shopPage.click();
+    }
+
+    async goToWishlistPage(){
+        await this.wishlistPage.click();
     }
 }
 module.exports={NavBar};
