@@ -114,12 +114,33 @@ test('Out of stock product', async ({ loggedIn }) => {
 });
 
 //---Wishlist----
-test('Add to Wishlist',async ({loggedIn, page})=>{
+test('Add to Wishlist', async ({ loggedIn, page }) => {
+    const productsPage = loggedIn.getProductsPage();
+    await productsPage.gotoProductsListing();
+    await productsPage.openRandomProductFromListing();
+    await productsPage.addProductToWishlist();
+    await expect(page.getByRole('main')).toContainText(/in wishlist/i);
+  });
+
+test('Remove from wishlist', async ({ page, loggedIn }) => {
+    const productsPage = loggedIn.getProductsPage();
+    await productsPage.gotoProductsListing();
+    await productsPage.selectProduct('Denim Jeans');
+    await productsPage.addProductToWishlist();
+
+    await loggedIn.getNavBar().goToWishlistPage();
+    await expect(page).toHaveURL(/\/wishlist/);
+
+    const wishlistPage = loggedIn.getWishlistPage();
+    await wishlistPage.removeProductFromWishlist('Denim Jeans');
+  });
+
+//---Review product----
+test('Add review', async ({ loggedIn }) => {
   const productsPage = loggedIn.getProductsPage();
   await productsPage.gotoProductsListing();
-  await productsPage.openRandomProductFromListing();
-  await productsPage.addProductToWishlist();
-  await expect(page.getByRole('main')).toContainText(/in wishlist/i);
+  await productsPage.selectProduct('Denim Jeans');
+  await productsPage.addReviewToProduct(5, 'Perfect fit and quality.');
 });
 
 // --- Cart ---

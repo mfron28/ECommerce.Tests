@@ -1,13 +1,18 @@
-class WishlistPage{
-    constructor(page){
-        this.page=page;
-        this.removeBtn=page.getByRole('button', { name: 'Remove' });
-    }
+class WishlistPage {
+  constructor(page) {
+    this.page = page;
+  }
 
-    async removeProductFromWishlist(){
-        await expect(this.removeBtn).toBeEnabled({ timeout: 10_000 });
-        await this.removeBtn.click();
-    }
+  async removeProductFromWishlist(productName) {
+    const item = this.page
+      .getByRole('main')
+      .getByRole('article')
+      .filter({ has: this.page.getByRole('heading', { name: productName }) });
+
+    const removeBtn = item.getByRole('button', { name: 'Remove' });
+    await removeBtn.waitFor({ state: 'visible' });
+    await removeBtn.click();
+  }
 }
 
-module.exports={WishlistPage};
+module.exports = { WishlistPage };

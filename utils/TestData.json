@@ -32,6 +32,10 @@
     "forgotPassword":{
       "email": "fronmadalina@outlook.com",
       "password": "Madalina9!"
+    },
+    "adminUser":{
+      "email": "admin@shop.com",
+      "password": "Admin12345!"
     }
     
   }

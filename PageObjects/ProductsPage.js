@@ -10,7 +10,13 @@ class ProductsPage {
       this.minPrice = page.getByRole('spinbutton', { name: 'Min price' });
       this.addToCart = page.getByRole('button', { name: 'Add to cart' });
       this.products = page.getByRole('main').getByRole('article');
-      this.addToWishlistBtn=page.getByRole('button', { name: 'Add to wishlist' });
+      this.reviewsSection = page.getByRole('main').locator('section').filter({
+        has: page.getByRole('heading', { name: 'Reviews' }),
+      });
+      this.reviewRating = this.reviewsSection.getByRole('combobox');       
+      this.reviewComment = this.reviewsSection.locator('textarea');        
+      this.submitReviewBtn = this.reviewsSection.getByRole('button', { name: 'Submit review' });
+      this.reviewSuccessMsg = this.reviewsSection.getByText(/review submitted/i);
     }
   
     async gotoProductsListing() {
@@ -88,9 +94,25 @@ class ProductsPage {
       await this.page.waitForURL('**/cart', { timeout: 15000 });
     }
 
-    async addProductToWishlist(){
-      await expect(this.addToWishlistBtn).toBeEnabled({ timeout: 10_000 });
-      await this.addToWishlistBtn.click();
+    async addProductToWishlist() {
+      const inWishlistBtn = this.page.getByRole('button', { name: /in wishlist/i });
+      if (await inWishlistBtn.isVisible()) {
+        return;
+      }
+      const addBtn = this.page.getByRole('button', { name: /add to wishlist/i });
+      await expect(addBtn).toBeEnabled({ timeout: 10_000 });
+      await addBtn.click();
+    }
+
+    async addReviewToProduct(rating, comment) {
+      const stars = Number(rating);
+      if (!Number.isInteger(stars) || stars < 1 || stars > 5) {
+        throw new Error('Rating must be an integer from 1 to 5');
+      }
+      await this.reviewRating.selectOption({ label: `${stars} stars` });
+      await this.reviewComment.fill(comment);
+      await this.submitReviewBtn.click();
+      await expect(this.reviewSuccessMsg).toBeVisible();
     }
   }
   
