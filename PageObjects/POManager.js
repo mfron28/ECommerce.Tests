@@ -7,6 +7,8 @@ const { RegisterPage } = require('./RegisterPage');
 const {ProfilePage} = require('./ProfilePage');
 const {ForgotPasswordPage}= require('./ForgotPasswordPage');
 const {WishlistPage}= require('./WishlistPage');
+const {AdminPage}=require('./AdminPage');
+const {AdminProductsPage}=require('./AdminProductsPage');
 
 class POManager {
   constructor(page) {
@@ -20,6 +22,8 @@ class POManager {
     this.profilePage = new ProfilePage(this.page);
     this.forgotPasswordPage=new ForgotPasswordPage(this.page);
     this.wishlistPage=new WishlistPage(this.page);
+    this.adminPage=new AdminPage(this.page);
+    this.adminProductsPage=new AdminProductsPage(this.page);
   }
 
   getLoginPage() {
@@ -54,6 +58,12 @@ class POManager {
 
   getWishlistPage(){
     return this.wishlistPage;
+  }
+  getAdminPage(){
+    return this.adminPage;
+  }
+  getAdminProductsPage(){
+    return this.adminProductsPage;
   }
 }
 

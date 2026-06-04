@@ -114,6 +114,21 @@ class ProductsPage {
       await this.submitReviewBtn.click();
       await expect(this.reviewSuccessMsg).toBeVisible();
     }
+
+    /** Picks the first listing product the logged-in user has not reviewed yet. */
+    async submitReviewOnUnreviewedProduct(rating, comment) {
+      const count = await this.products.count();
+      for (let i = 0; i < count; i++) {
+        await this.gotoProductsListing();
+        await this.openProductFromListingByIndex(i);
+        if (await this.reviewsSection.getByText(/already reviewed/i).isVisible()) {
+          continue;
+        }
+        await this.addReviewToProduct(rating, comment);
+        return;
+      }
+      throw new Error('No unreviewed in-stock product found on the listing');
+    }
   }
   
   module.exports = { ProductsPage };

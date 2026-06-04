@@ -1,7 +1,5 @@
-const { test, expect } = require('@playwright/test');
-const testData = require('../../utils/TestData.json');
-const { validUser, wrongPasswordUser, invalidUser } = testData;
 const { test, expect } = require('../../fixtures/test-fixtures');
+const { validUser, wrongPasswordUser, invalidUser } = require('../../utils/TestData.json');
 
 const apiBase =
   process.env.API_BASE_URL ||
