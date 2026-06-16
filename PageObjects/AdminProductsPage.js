@@ -30,6 +30,19 @@ class AdminProductsPage {
     await this.imageUrlsInput.fill(imageUrls);
     await this.createBtn.click();
   }
+
+  productRow(productName) {
+    return this.page .getByRole('main').getByRole('row').filter({ hasText: productName });
+  }
+  async selectProductForEdit(productName){
+    await this.productRow(productName).getByRole('button',{name:'Edit'}).click();
+    await this.editProduct.waitFor({state:'visible'});
+  }
+
+  async updateProduct(){
+    await this.stockInput.fill('50');
+    await this.updateBtn.click();
+  }
 }
 
 module.exports = { AdminProductsPage };
