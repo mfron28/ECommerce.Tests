@@ -30,7 +30,8 @@ class CartPage {
       .or(line.locator('input[type="number"]'))
       .first();
     await qty.fill(String(noOfProducts));
-    await qty.press('Enter');
+    await qty.blur();
+    await expect(qty).toHaveValue(String(noOfProducts));
   }
 
   async goToCheckoutFromCartPage() {

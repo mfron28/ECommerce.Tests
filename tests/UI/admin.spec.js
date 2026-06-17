@@ -92,3 +92,25 @@ test('Admin deletes a coupon', async ({ loggedInAdmin, page }) => {
 
   await adminCouponsPage.deleteCoupon();
 });
+
+test('Admin edits a coupon', async ({ loggedInAdmin, page }) => {
+  const adminPage = loggedInAdmin.getAdminPage();
+  const adminCouponsPage = loggedInAdmin.getAdminCouponsPage();
+
+  await adminPage.goToAdminPage();
+  await expect(page.getByRole('heading', { name: 'Admin dashboard' })).toBeVisible();
+
+  await adminPage.openCouponsTab();
+  await expect(page.getByRole('heading', { name: 'Add coupon', level: 2 })).toBeVisible();
+
+  await adminCouponsPage.editCoupon('SAVE10', {
+    code: 'SAVE10',
+    type: 'percent',
+    value: 20,
+    minSubtotal: 30,
+    expiresAt: '2027-06-11',
+    active: true,
+  });
+
+  await expect(adminCouponsPage.couponRow('SAVE10').getByRole('cell').nth(2)).toHaveText('20%');
+});

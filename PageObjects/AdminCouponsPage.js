@@ -71,6 +71,12 @@ class AdminCouponsPage {
     const row = code ? this.couponRow(code) : this.couponRowByPrefix();
     await row.getByRole('button', { name: 'Delete' }).click();
   }
+
+  async editCoupon(code,fields){
+    await this.selectCouponForEdit(code);
+    await this.fillCouponForm(fields);
+    await this.updateBtn.click();
+  }
 }
 
 module.exports = { AdminCouponsPage };
