@@ -3,6 +3,7 @@ class Checkout {
     this.page = page;
     this.main = page.getByRole('main');
     this.placeOrderButton = page.getByRole('button', { name: 'Place order' });
+    this.stockReserved = this.main.getByText(/Stock reserved until/i);
     this.fullName = this.main.locator('.form-group').filter({ hasText: 'Full name' }).getByRole('textbox');
     this.addressLine1 = this.main.locator('.form-group').filter({ hasText: 'Address line 1' }).getByRole('textbox');
     this.addressLine2 = this.main.locator('.form-group').filter({ hasText: 'Address line 2' }).getByRole('textbox');
@@ -49,6 +50,8 @@ class Checkout {
       await this.couponInput.fill(coupon);
       await this.applyBtn.click();
     }
+    // The page reserves stock on load; placing the order before that finishes is rejected.
+    await this.stockReserved.waitFor({ state: 'visible' });
     await this.placeAnOrder();
   }
 }

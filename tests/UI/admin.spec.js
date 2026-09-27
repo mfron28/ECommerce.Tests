@@ -103,14 +103,25 @@ test('Admin edits a coupon', async ({ loggedInAdmin, page }) => {
   await adminPage.openCouponsTab();
   await expect(page.getByRole('heading', { name: 'Add coupon', level: 2 })).toBeVisible();
 
-  await adminCouponsPage.editCoupon('SAVE10', {
-    code: 'SAVE10',
+  // Edit a coupon created here, so shared coupons like SAVE10 (used by checkout tests) stay untouched.
+  const couponCode = `TEST${Date.now()}`;
+  await adminCouponsPage.addCoupon({
+    code: couponCode,
     type: 'percent',
-    value: 20,
-    minSubtotal: 30,
-    expiresAt: '2027-06-11',
+    value: 10,
+    minSubtotal: 0,
+    expiresAt: adminCouponsPage.expiryOneYearFromNow(),
     active: true,
   });
 
-  await expect(adminCouponsPage.couponRow('SAVE10').getByRole('cell').nth(2)).toHaveText('20%');
+  await adminCouponsPage.editCoupon(couponCode, {
+    code: couponCode,
+    type: 'percent',
+    value: 20,
+    minSubtotal: 30,
+    expiresAt: adminCouponsPage.expiryOneYearFromNow(),
+    active: true,
+  });
+
+  await expect(adminCouponsPage.couponRow(couponCode).getByRole('cell').nth(2)).toHaveText('20%');
 });
