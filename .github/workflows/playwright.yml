@@ -4,10 +4,25 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  # "Run workflow" button in the Actions tab.
+  workflow_dispatch:
+  # Daily run against the hosted app (06:00 UTC).
+  schedule:
+    - cron: '0 6 * * *'
+
+# Only one report deploy at a time; don't cancel a run that is already publishing.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      # Set these in Settings → Secrets and variables → Actions → Variables.
+      PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL }}
+      API_BASE_URL: ${{ vars.API_BASE_URL }}
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -16,7 +31,17 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: npx playwright install --with-deps chromium
+    # Render's free tier sleeps when idle; wake the API before the tests start.
+    - name: Wake up hosted API
+      if: ${{ env.API_BASE_URL != '' }}
+      run: |
+        for i in $(seq 1 18); do
+          if curl -fsS "$API_BASE_URL/api/health"; then echo; echo "API is up"; exit 0; fi
+          echo "API not ready yet (attempt $i), waiting 10s..."
+          sleep 10
+        done
+        echo "API did not respond at $API_BASE_URL/api/health" && exit 1
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4
@@ -25,3 +50,24 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+    - name: Upload report for GitHub Pages
+      if: ${{ !cancelled() && github.event_name != 'pull_request' }}
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: playwright-report/
+
+  # Publishes the latest HTML report to https://<user>.github.io/<repo>/
+  publish-report:
+    needs: test
+    if: ${{ !cancelled() && github.event_name != 'pull_request' }}
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+    - name: Deploy report to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
