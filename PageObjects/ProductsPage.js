@@ -117,6 +117,8 @@ class ProductsPage {
 
     /** Picks the first listing product the logged-in user has not reviewed yet. */
     async submitReviewOnUnreviewedProduct(rating, comment) {
+      // count() doesn't wait, so let the listing load first (slow on the hosted API).
+      await this.products.first().waitFor({ state: 'visible' });
       const count = await this.products.count();
       for (let i = 0; i < count; i++) {
         await this.gotoProductsListing();
