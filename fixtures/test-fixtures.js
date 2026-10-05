@@ -1,6 +1,6 @@
 const base = require('@playwright/test');
 const { POManager } = require('../PageObjects/POManager');
-const testData = require('../utils/TestData.json');
+const testData = require('../utils/testData');
 const { resetAllTestUsers } = require('../utils/testCleanup');
 
 const test = base.test.extend({
@@ -28,6 +28,9 @@ const test = base.test.extend({
   },
 
   loggedInAdmin: async ({ page, poManager }, use) => {
+    if (!testData.adminUser.password) {
+      throw new Error('ADMIN_PASSWORD is not set. Add it to .env (see .env.example) or as a CI secret.');
+    }
     const login = poManager.getLoginPage();
     await login.gotoLogin();
     await login.validateLogin(testData.adminUser.email, testData.adminUser.password);

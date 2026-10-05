@@ -34,8 +34,7 @@
       "password": "Madalina9!"
     },
     "adminUser":{
-      "email": "admin@shop.com",
-      "password": "Admin12345!"
+      "email": "admin@shop.com"
     }
     
   }

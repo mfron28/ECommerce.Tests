@@ -1,5 +1,9 @@
 // @ts-check
 import { defineConfig } from '@playwright/test';
+import fs from 'node:fs';
+
+// Secrets such as ADMIN_PASSWORD live in a git-ignored .env locally; CI sets them as repo secrets.
+if (fs.existsSync('.env')) process.loadEnvFile('.env');
 
 export default defineConfig({
   timeout: 120_000,
@@ -16,7 +20,7 @@ export default defineConfig({
       name: 'ui',
       testDir: './tests/UI',
       use: {
-        baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:5173',
+        baseURL: process.env.PLAYWRIGHT_BASE_URL || 'https://e-commerce-sigma-five-58.vercel.app',
         browserName: 'chromium',
         headless: true,
         screenshot: 'on',

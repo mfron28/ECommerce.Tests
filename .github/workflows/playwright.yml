@@ -23,6 +23,8 @@ jobs:
       # Set these in Settings → Secrets and variables → Actions → Variables.
       PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL }}
       API_BASE_URL: ${{ vars.API_BASE_URL }}
+      # Settings → Secrets and variables → Actions → Secrets.
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4

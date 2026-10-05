@@ -1,9 +1,9 @@
-const testData = require('./TestData.json');
+const testData = require('./testData');
 
 const apiBase =
   process.env.API_BASE_URL ||
   process.env.PLAYWRIGHT_API_BASE_URL ||
-  'http://127.0.0.1:5050';
+  'https://ecommerce-api-gvba.onrender.com';
 
 async function loginAndGetHeaders(request, email, password) {
   const loginRes = await request.post(`${apiBase}/api/login`, {

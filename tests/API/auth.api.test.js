@@ -4,7 +4,7 @@ const { validUser, wrongPasswordUser, invalidUser } = require('../../utils/TestD
 const apiBase =
   process.env.API_BASE_URL ||
   process.env.PLAYWRIGHT_API_BASE_URL ||
-  'http://127.0.0.1:5050';
+  'https://ecommerce-api-gvba.onrender.com';
 
 test.describe('Auth API', () => {
   test('GET /api/health returns ok', async ({ request }) => {
